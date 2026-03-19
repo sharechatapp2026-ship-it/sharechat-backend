@@ -1,0 +1,54 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String    @id @default(uuid())
+  username       String    @unique
+  email          String    @unique
+  passwordHash   String
+  fullName       String?
+  profilePicture String?
+  bio            String?
+  birthYear      Int?
+  gender         String?
+  language       String    @default("ar")
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  
+  interests      Interest[]
+  sessions       Session[]
+  
+  @@map("users")
+}
+
+model Interest {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  topic     String
+  score     Float?   
+  isManual  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  
+  @@unique([userId, topic])
+  @@map("interests")
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id])
+  token        String   @unique
+  refreshToken String?  @unique
+  expiresAt    DateTime
+  deviceInfo   Json?
+  createdAt    DateTime @default(now())
+  
+  @@map("sessions")
+}
