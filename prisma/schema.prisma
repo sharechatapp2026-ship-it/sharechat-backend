@@ -18,26 +18,22 @@ model User {
   birthYear      Int?
   gender         String?
   language       String    @default("ar")
+  interests      String[]  // مصفوفة من الاهتمامات
+  displayStyle   String?   // short, analytical, discussion, philosophical
+  workField      String?
+  educationLevel String?
+  country        String?
+  city           String?
+
+  emailVerified  Boolean  @default(false)
+
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
   
-  interests      Interest[]
   sessions       Session[]
-  
-  @@map("users")
-}
+  verifications  Verification[]
 
-model Interest {
-  id        String   @id @default(uuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  topic     String
-  score     Float?   
-  isManual  Boolean  @default(false)
-  createdAt DateTime @default(now())
-  
-  @@unique([userId, topic])
-  @@map("interests")
+  @@map("users")
 }
 
 model Session {
@@ -51,4 +47,19 @@ model Session {
   createdAt    DateTime @default(now())
   
   @@map("sessions")
+}
+  model Verification {
+  id             String   @id @default(uuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id])
+  email          String
+  code           String
+  type           String   @default("email_verification")
+  expiresAt      DateTime
+  verifiedAt     DateTime?
+  attempts       Int      @default(0)
+  createdAt      DateTime @default(now())
+  
+  @@map("verifications")
+
 }

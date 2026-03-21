@@ -44,3 +44,11 @@ coverage/
 tmp/
 temp/
 *.tmp
+
+node_modules/
+.env
+.DS_Store
+uploads/
+*.log
+dist/
+build/
