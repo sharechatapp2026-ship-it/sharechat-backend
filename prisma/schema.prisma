@@ -32,6 +32,8 @@ model User {
   
   sessions       Session[]
   verifications  Verification[]
+  pushTokens     PushToken[]
+  notifications  Notification[]
 
   @@map("users")
 }
@@ -61,5 +63,28 @@ model Session {
   createdAt      DateTime @default(now())
   
   @@map("verifications")
+}
 
+model PushToken {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  createdAt DateTime @default(now())
+
+  @@map("push_tokens")
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String   @default("general")
+  title     String
+  body      String
+  data      Json?
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@map("notifications")
 }
