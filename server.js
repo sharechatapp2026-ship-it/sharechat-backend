@@ -13,7 +13,7 @@ const __dirname = path.dirname(__filename)
 dotenv.config()
 
 const app = express()
-const PORT = process.env.PORT || 8080
+const PORT = process.env.PORT || 3000
 
 // Middleware
 app.use(cors())
@@ -43,20 +43,24 @@ app.get('/health', (req, res) => {
   })
 })
 
-// Keep the process alive
+// Prevent Railway from stopping the container
 process.on('SIGTERM', () => {
-  console.log('SIGTERM received, keeping server alive...')
+  console.log('SIGTERM received, ignoring...')
 })
 
 process.on('SIGINT', () => {
-  console.log('SIGINT received, keeping server alive...')
+  console.log('SIGINT received, ignoring...')
 })
+
+// Keep the process alive
+setInterval(() => {
+  // Keep running
+}, 60000)
 
 // Start server
 const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Server running on port: ${PORT}`)
 })
 
-// Prevent Railway from stopping the container
 server.keepAliveTimeout = 65000
 server.headersTimeout = 66000
