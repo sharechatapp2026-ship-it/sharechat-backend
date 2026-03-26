@@ -43,15 +43,13 @@ app.get('/health', (req, res) => {
   })
 })
 
-// Keep the process alive - don't exit on SIGTERM
+// Keep the process alive
 process.on('SIGTERM', () => {
   console.log('SIGTERM received, keeping server alive...')
-  // Do not exit
 })
 
 process.on('SIGINT', () => {
   console.log('SIGINT received, keeping server alive...')
-  // Do not exit
 })
 
 // Start server
@@ -59,7 +57,6 @@ const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Server running on port: ${PORT}`)
 })
 
-// Keep the server running even if there are errors
-server.on('error', (err) => {
-  console.error('Server error:', err)
-})
+// Prevent Railway from stopping the container
+server.keepAliveTimeout = 65000
+server.headersTimeout = 66000
