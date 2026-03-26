@@ -3,6 +3,9 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import authRoutes from './src/routes/authRoutes.js'
 
+import notificationRoutes from './src/routes/notificationRoutes.js'
+app.use('/api/notifications', notificationRoutes)
+
 dotenv.config()
 
 const app = express()
