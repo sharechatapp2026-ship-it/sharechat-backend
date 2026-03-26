@@ -43,18 +43,23 @@ app.get('/health', (req, res) => {
   })
 })
 
-// Handle graceful shutdown
+// Keep the process alive - don't exit on SIGTERM
 process.on('SIGTERM', () => {
-  console.log('SIGTERM received, closing server...')
-  process.exit(0)
+  console.log('SIGTERM received, keeping server alive...')
+  // Do not exit
 })
 
 process.on('SIGINT', () => {
-  console.log('SIGINT received, closing server...')
-  process.exit(0)
+  console.log('SIGINT received, keeping server alive...')
+  // Do not exit
 })
 
 // Start server
-app.listen(PORT, '0.0.0.0', () => {
+const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Server running on port: ${PORT}`)
+})
+
+// Keep the server running even if there are errors
+server.on('error', (err) => {
+  console.error('Server error:', err)
 })
