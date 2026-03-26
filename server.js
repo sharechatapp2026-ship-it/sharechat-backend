@@ -2,7 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import authRoutes from './src/routes/authRoutes.js'
-import notificationRoutes from './src/routes/notificationRoutes.js'  // ← هذا بعد app
+import notificationRoutes from './src/routes/notificationRoutes.js'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import fs from 'fs'
@@ -12,7 +12,7 @@ const __dirname = path.dirname(__filename)
 
 dotenv.config()
 
-const app = express()  // ← يجب أن يكون قبل استخدام app
+const app = express()
 const PORT = process.env.PORT || 3000
 
 // Middleware
@@ -27,18 +27,23 @@ if (!fs.existsSync(uploadDir)) {
 }
 app.use('/uploads', express.static(uploadDir))
 
-// Routes - يجب أن تكون بعد تعريف app
+// Routes
 app.use('/api/auth', authRoutes)
-app.use('/api/notifications', notificationRoutes)  // ← هنا
+app.use('/api/notifications', notificationRoutes)
 
+// Health check
 app.get('/', (req, res) => {
-  res.json({ message: 'ShareChat API يعمل 🚀' })
+  res.json({ message: 'ShareChat API works 🚀' })
 })
 
 app.get('/health', (req, res) => {
-  res.json({ status: 'OK', time: new Date().toLocaleString('ar-EG') })
+  res.json({ 
+    status: 'OK', 
+    time: new Date().toLocaleString('ar-EG')
+  })
 })
 
+// Start server
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🚀 الخادم يعمل على: http://0.0.0.0:${PORT}`)
+  console.log(`🚀 Server running on port: ${PORT}`)
 })
