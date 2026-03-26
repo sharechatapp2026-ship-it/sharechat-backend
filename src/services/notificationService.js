@@ -1,6 +1,7 @@
 import prisma from '../config/database.js'
 import { sendFCMNotification } from './firebase.js'
 
+
 export async function sendPushNotification(userId, title, body, data = {}) {
   try {
     const tokens = await prisma.pushToken.findMany({ where: { userId } })
